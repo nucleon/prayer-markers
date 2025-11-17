@@ -27,7 +27,7 @@ import java.util.Collection;
 
 public class PrayerMarkersPluginPanel extends PluginPanel
 {
-	private static final ImageIcon ADD_ICON;
+	private static final ImageIcon ADD_ICON, PRAYER_ICON, STANDARD_ICON, ARCEUUS_ICON, ANCIENT_ICON, LUNAR_ICON;
 	private final PluginErrorPanel errorPanel = new PluginErrorPanel();
 	public final PrayerMarkersPlugin plugin;
 	private final JPanel markerView = new JPanel();
@@ -36,6 +36,21 @@ public class PrayerMarkersPluginPanel extends PluginPanel
 	{
 		final BufferedImage addIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "add_icon.png");
 		ADD_ICON = new ImageIcon(addIcon);
+
+		final BufferedImage prayerIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "prayer_icon.png");
+		PRAYER_ICON = new ImageIcon(prayerIcon);
+
+		final BufferedImage standardIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "standard_icon.png");
+		STANDARD_ICON = new ImageIcon(standardIcon);
+
+		final BufferedImage arceuusIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "arceuus_icon.png");
+		ARCEUUS_ICON = new ImageIcon(arceuusIcon);
+
+		final BufferedImage ancientIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "ancient_icon.png");
+		ANCIENT_ICON = new ImageIcon(ancientIcon);
+
+		final BufferedImage lunarIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "lunar_icon.png");
+		LUNAR_ICON = new ImageIcon(lunarIcon);
 	}
 
 	public PrayerMarkersPluginPanel(PrayerMarkersPlugin plugin)
