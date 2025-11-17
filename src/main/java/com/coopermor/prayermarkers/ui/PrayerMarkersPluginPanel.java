@@ -2,16 +2,18 @@ package com.coopermor.prayermarkers.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import com.coopermor.prayermarkers.PrayerMarker;
 import com.coopermor.prayermarkers.PrayerMarkersPlugin;
 import com.coopermor.prayermarkers.ui.adapters.AddMarkerMouseAdapter;
-import com.coopermor.prayermarkers.ui.PrayerMarkersPanel;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.PluginErrorPanel;
+import net.runelite.client.ui.components.materialtabs.MaterialTab;
+import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 import net.runelite.client.util.ImageUtil;
 
 import javax.swing.Box;
@@ -19,15 +21,18 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 
+import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 
 public class PrayerMarkersPluginPanel extends PluginPanel
 {
-	private static final ImageIcon ADD_ICON, PRAYER_ICON, STANDARD_ICON, ARCEUUS_ICON, ANCIENT_ICON, LUNAR_ICON;
+	private static final ImageIcon ADD_ICON, PRAYER_ICON, STANDARD_ICON, ARCEUUS_ICON, ANCIENT_ICON, LUNAR_ICON, INV_ICON;
 	private final PluginErrorPanel errorPanel = new PluginErrorPanel();
 	public final PrayerMarkersPlugin plugin;
 	private final JPanel markerView = new JPanel();
@@ -51,6 +56,9 @@ public class PrayerMarkersPluginPanel extends PluginPanel
 
 		final BufferedImage lunarIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "lunar_icon.png");
 		LUNAR_ICON = new ImageIcon(lunarIcon);
+
+		final BufferedImage inventoryIcon = ImageUtil.loadImageResource(PrayerMarkersPlugin.class, "inventory_icon.png");
+		INV_ICON = new ImageIcon(inventoryIcon);
 	}
 
 	public PrayerMarkersPluginPanel(PrayerMarkersPlugin plugin)
@@ -62,8 +70,12 @@ public class PrayerMarkersPluginPanel extends PluginPanel
 		setupErrorPanel(true);
 
 		// title panel
-		JPanel northPanel = new JPanel(new BorderLayout());
+		JPanel northPanel = new JPanel();
+		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 		northPanel.setBorder(new EmptyBorder(1, 0, 10, 0));
+		MaterialTabGroup tabGroup = createOptionTabGroup();
+		northPanel.add(tabGroup);
+		northPanel.add(Box.createVerticalStrut(10));
 
 		JPanel titlePanel = new JPanel(new BorderLayout());
 		titlePanel.setBorder(new EmptyBorder(1, 3, 10, 7));
@@ -133,5 +145,41 @@ public class PrayerMarkersPluginPanel extends PluginPanel
 			markerView.setBackground(ColorScheme.DARK_GRAY_COLOR);
 			markerView.add(errorPanel);
 		}
+	}
+	private MaterialTabGroup createOptionTabGroup()
+	{
+		ImageIcon[] icons = {
+				PRAYER_ICON,
+				STANDARD_ICON,
+				ARCEUUS_ICON,
+				ANCIENT_ICON,
+				LUNAR_ICON,
+				INV_ICON
+		};
+		MaterialTabGroup group = new MaterialTabGroup();
+		group.setLayout(new GridLayout(1, icons.length, 0, 0));
+		MaterialTab[] tabs = new MaterialTab[icons.length];
+		for (int i = 0; i < icons.length; i++)
+		{
+			JPanel contentPanel = new JPanel();
+			MaterialTab tab = new MaterialTab("", group, contentPanel);
+			tab.setIcon(icons[i]);
+			SwingUtilities.invokeLater(() ->
+			{
+				for (Component c : tab.getComponents())
+				{
+					if (c instanceof JLabel)
+					{
+						JLabel label = (JLabel) c;
+						label.setHorizontalAlignment(SwingConstants.CENTER);
+						label.setVerticalAlignment(SwingConstants.CENTER);
+					}
+				}
+			});
+			tabs[i] = tab;
+			group.addTab(tab);
+		}
+		SwingUtilities.invokeLater(() -> tabs[0].select());
+		return group;
 	}
 }
